@@ -64,6 +64,8 @@ parameters:
 
 ### Deploy the cluster
 ```
+kubectl create ns tidb-cluster
+kubectl create secret generic tidb-secret --from-literal=root=password  --namespace=tidb-cluster
 helm inspect values pingcap/tidb-cluster --version=v1.0.6 > values-tidb-cluster.yaml
 sed -i 's/local-storage/px-db/g' values-tidb-cluster.yaml
 
@@ -100,6 +102,7 @@ sysbench \
   --mysql-host=tidb-cluster-tidb.tidb-cluster \
   --mysql-port=4000 \
   --mysql-user=root \
+  --mysql-password=password \
   --mysql-db=sbtest \
   --time=600 \
   --threads=16 \
@@ -119,6 +122,7 @@ sysbench \
   --mysql-host=<tidb-host> \
   --mysql-host=tidb-cluster-tidb.tidb-cluster \
   --mysql-user=root \
+  --mysql-password=password \
   --mysql-db=sbtest \
   --time=600 \
   --threads=16 \
@@ -138,6 +142,7 @@ sysbench \
   --mysql-host=tidb-cluster-tidb.tidb-cluster \
   --mysql-port=4000 \
   --mysql-user=root \
+  --mysql-password=password \
   --mysql-db=sbtest \
   --time=600 \
   --threads=<threads> \
