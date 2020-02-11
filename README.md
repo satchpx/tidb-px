@@ -46,6 +46,25 @@ helm install pingcap/tidb-operator --name=tidb-operator --namespace=tidb-admin -
 kubectl -n tidb-admin get pods
 ```
 
+
+### Create Portworx StorageClasses
+Create the storageClass below:
+```
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+ name: px-db
+provisioner: kubernetes.io/portworx-volume
+allowVolumeExpansion: true
+parameters:
+ repl: "3"
+ priority_io: "high"
+ io_profile: "db"
+```
+
+### Deploy the cluster
+
+
 ## Load test tidb
 
 
