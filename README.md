@@ -89,6 +89,65 @@ tidb-cluster   pd-tidb-cluster-pd-2   Bound    pvc-b0646e21-4c70-11ea-bb94-000c2
 
 ## Load test tidb
 
+### Launch sysbench client
+```
+kubectl run -it --rm sysbench-client --image=perconalab/sysbench:latest --restart=Never -- bash
+```
 
+### Initialization
+```
+sysbench \
+  --mysql-host=tidb-cluster-tidb.tidb-cluster \
+  --mysql-port=4000 \
+  --mysql-user=root \
+  --mysql-db=sbtest \
+  --time=600 \
+  --threads=16 \
+  --report-interval=10 \
+  --db-driver=mysql \
+  --rand-type=uniform \
+  --rand-seed=$RANDOM \
+  --tables=16 \
+  --table-size=10000000 \
+  oltp_common \
+  prepare
+  ```
 
+### Warm up
+```
+sysbench \
+  --mysql-host=<tidb-host> \
+  --mysql-host=tidb-cluster-tidb.tidb-cluster \
+  --mysql-user=root \
+  --mysql-db=sbtest \
+  --time=600 \
+  --threads=16 \
+  --report-interval=10 \
+  --db-driver=mysql \
+  --rand-type=uniform \
+  --rand-seed=$RANDOM \
+  --tables=16 \
+  --table-size=10000000 \
+  oltp_common \
+  prewarm
+```
 
+### Pressure test
+```
+sysbench \
+  --mysql-host=tidb-cluster-tidb.tidb-cluster \
+  --mysql-port=4000 \
+  --mysql-user=root \
+  --mysql-db=sbtest \
+  --time=600 \
+  --threads=<threads> \
+  --report-interval=10 \
+  --db-driver=mysql \
+  --rand-type=uniform \
+  --rand-seed=$RANDOM \
+  --tables=16 \
+  --table-size=10000000 \
+  <test> \
+  run
+```
+*NOTE:* <test> is the test case of sysbench. In this test, oltp_point_select, oltp_update_index, oltp_update_no_index, and oltp_read_write are chosen as <test>.
