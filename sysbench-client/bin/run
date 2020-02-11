@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+TESTS=(oltp_point_select oltp_update_index oltp_update_no_index oltp_read_write)
+MYSQL_HOST='tidb-cluster-tidb.tidb-cluster'
+MYSQL_PORT='4000'
+MYSQL_USER='root'
+MYSQL_PASS='password'
+DB_NAME='sbtest'
+
+# Initialize
+sysbench \
+  --mysql-host=${MYSQL_HOST} \
+  --mysql-port=${MYSQL_PORT} \
+  --mysql-user=${MYSQL_USER} \
+  --mysql-password=${MYSQL_PASS} \
+  --mysql-db=${DB_NAME} \
+  --time=600 \
+  --threads=16 \
+  --report-interval=10 \
+  --db-driver=mysql \
+  --rand-type=uniform \
+  --rand-seed=$RANDOM \
+  --tables=16 \
+  --table-size=10000000 \
+  oltp_common \
+  prepare
+
+# Warm up
+sysbench \
+  --mysql-host=${MYSQL_HOST} \
+  --mysql-port=${MYSQL_PORT} \
+  --mysql-user=${MYSQL_USER} \
+  --mysql-password=${MYSQL_PASS} \
+  --mysql-db=${DB_NAME} \
+  --time=600 \
+  --threads=16 \
+  --report-interval=10 \
+  --db-driver=mysql \
+  --rand-type=uniform \
+  --rand-seed=$RANDOM \
+  --tables=16 \
+  --table-size=10000000 \
+  oltp_common \
+  prewarm
+
+# Run
+for test in ${TESTS[@]}; do
+    sysbench \
+      --mysql-host=${MYSQL_HOST} \
+      --mysql-port=${MYSQL_PORT} \
+      --mysql-user=${MYSQL_USER} \
+      --mysql-password=${MYSQL_PASS} \
+      --mysql-db=${DB_NAME} \
+      --time=600 \
+      --threads=<threads> \
+      --report-interval=10 \
+      --db-driver=mysql \
+      --rand-type=uniform \
+      --rand-seed=$RANDOM \
+      --tables=16 \
+      --table-size=10000000 \
+      ${test} \
+      run
+done
