@@ -119,8 +119,8 @@ sysbench \
 ### Warm up
 ```
 sysbench \
-  --mysql-host=<tidb-host> \
   --mysql-host=tidb-cluster-tidb.tidb-cluster \
+  --mysql-port=4000 \
   --mysql-user=root \
   --mysql-password=password \
   --mysql-db=sbtest \
