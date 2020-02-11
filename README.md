@@ -155,4 +155,4 @@ sysbench \
   <test> \
   run
 ```
-*NOTE:* <test> is the test case of sysbench. In this test, oltp_point_select, oltp_update_index, oltp_update_no_index, and oltp_read_write are chosen as <test>.
+*NOTE:* <test> is the test case of sysbench. In this test, `oltp_point_select`, `oltp_update_index`, `oltp_update_no_index`, and `oltp_read_write` are chosen as <test>.
