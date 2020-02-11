@@ -63,8 +63,29 @@ parameters:
 ```
 
 ### Deploy the cluster
+```
+helm inspect values pingcap/tidb-cluster --version=v1.0.6 > values-tidb-cluster.yaml
+sed -i 's/local-storage/px-db/g' values-tidb-cluster.yaml
 
+helm install pingcap/tidb-cluster --name=tidb-cluster --namespace=tidb-cluster --version=v1.0.6 -f values-tidb-cluster.yaml
+```
 
+Verify:
+```
+# kubectl get pods -n tidb-cluster
+NAME                                      READY   STATUS    RESTARTS   AGE
+tidb-cluster-discovery-7c954cf9b5-rq749   1/1     Running   0          39s
+tidb-cluster-monitor-78f88b7568-fmj2z     3/3     Running   0          39s
+tidb-cluster-pd-0                         1/1     Running   0          39s
+tidb-cluster-pd-1                         1/1     Running   0          39s
+tidb-cluster-pd-2                         1/1     Running   0          39s
+
+# kubectl get pvc -A
+NAMESPACE      NAME                   STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+tidb-cluster   pd-tidb-cluster-pd-0   Bound    pvc-b05fe801-4c70-11ea-bb94-000c297fd2ae   1Gi        RWO            px-db          30s
+tidb-cluster   pd-tidb-cluster-pd-1   Bound    pvc-b0630d3e-4c70-11ea-bb94-000c297fd2ae   1Gi        RWO            px-db          30s
+tidb-cluster   pd-tidb-cluster-pd-2   Bound    pvc-b0646e21-4c70-11ea-bb94-000c297fd2ae   1Gi        RWO            px-db          30s
+```
 ## Load test tidb
 
 
