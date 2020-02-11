@@ -86,6 +86,7 @@ tidb-cluster   pd-tidb-cluster-pd-0   Bound    pvc-b05fe801-4c70-11ea-bb94-000c2
 tidb-cluster   pd-tidb-cluster-pd-1   Bound    pvc-b0630d3e-4c70-11ea-bb94-000c297fd2ae   1Gi        RWO            px-db          30s
 tidb-cluster   pd-tidb-cluster-pd-2   Bound    pvc-b0646e21-4c70-11ea-bb94-000c297fd2ae   1Gi        RWO            px-db          30s
 ```
+
 ## Load test tidb
 
 
